@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, CircularProgress, Stack, TextField, Typography } from '@mui/material';
+import { Box, CircularProgress, Stack, TextField, Typography, Paper } from '@mui/material';
 import Popup from '../../components/Popup';
 import { BlueButton } from '../../components/buttonStyles';
 import { addStuff } from '../../redux/userRelated/userHandle';
@@ -10,7 +10,6 @@ const StudentComplain = () => {
     const [date, setDate] = useState("");
 
     const dispatch = useDispatch()
-
     const { status, currentUser, error } = useSelector(state => state.user);
 
     const user = currentUser._id
@@ -52,61 +51,59 @@ const StudentComplain = () => {
             <Box
                 sx={{
                     flex: '1 1 auto',
-                    alignItems: 'center',
                     display: 'flex',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minHeight: '100vh',
+                    backgroundColor: '#f5f5f5',
+                    px: 2
                 }}
             >
-                <Box
-                    sx={{
-                        maxWidth: 550,
-                        px: 3,
-                        py: '100px',
-                        width: '100%'
-                    }}
-                >
-                    <div>
-                        <Stack spacing={1} sx={{ mb: 3 }}>
-                            <Typography variant="h4">Complain</Typography>
-                        </Stack>
-                        <form onSubmit={submitHandler}>
-                            <Stack spacing={3}>
-                                <TextField
-                                    fullWidth
-                                    label="Select Date"
-                                    type="date"
-                                    value={date}
-                                    onChange={(event) => setDate(event.target.value)} required
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />
-                                <TextField
-                                    fullWidth
-                                    label="Write your complain"
-                                    variant="outlined"
-                                    value={complaint}
-                                    onChange={(event) => {
-                                        setComplaint(event.target.value);
-                                    }}
-                                    required
-                                    multiline
-                                    maxRows={4}
-                                />
-                            </Stack>
-                            <BlueButton
+                <Paper elevation={8} sx={{ maxWidth: 600, width: '100%', borderRadius: 3, p: { xs: 3, sm: 5 } }}>
+                    <Stack spacing={2} sx={{ mb: 4, textAlign: 'center' }}>
+                        <Typography variant="h4" sx={{ fontWeight: 600, color: '#2c2143' }}>
+                            Submit a Complain
+                        </Typography>
+                        <Typography variant="body1" sx={{ color: '#555' }}>
+                            Select the date and write your complaint below. Your submission will be sent directly to the school administration.
+                        </Typography>
+                    </Stack>
+                    <form onSubmit={submitHandler}>
+                        <Stack spacing={3}>
+                            <TextField
                                 fullWidth
-                                size="large"
-                                sx={{ mt: 3 }}
-                                variant="contained"
-                                type="submit"
-                                disabled={loader}
-                            >
-                                {loader ? <CircularProgress size={24} color="inherit" /> : "Add"}
-                            </BlueButton>
-                        </form>
-                    </div>
-                </Box>
+                                label="Select Date"
+                                type="date"
+                                value={date}
+                                onChange={(event) => setDate(event.target.value)}
+                                required
+                                InputLabelProps={{ shrink: true }}
+                                sx={{ backgroundColor: '#fafafa', borderRadius: 1 }}
+                            />
+                            <TextField
+                                fullWidth
+                                label="Write your complaint"
+                                variant="outlined"
+                                value={complaint}
+                                onChange={(event) => setComplaint(event.target.value)}
+                                required
+                                multiline
+                                maxRows={4}
+                                sx={{ backgroundColor: '#fafafa', borderRadius: 1 }}
+                            />
+                        </Stack>
+                        <BlueButton
+                            fullWidth
+                            size="large"
+                            sx={{ mt: 4, py: 1.5 }}
+                            variant="contained"
+                            type="submit"
+                            disabled={loader}
+                        >
+                            {loader ? <CircularProgress size={24} color="inherit" /> : "Submit"}
+                        </BlueButton>
+                    </form>
+                </Paper>
             </Box>
             <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} />
         </>

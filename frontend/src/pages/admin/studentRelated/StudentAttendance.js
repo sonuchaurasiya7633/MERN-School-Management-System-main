@@ -31,26 +31,27 @@ const StudentAttendance = ({ situation }) => {
     const [message, setMessage] = useState("");
     const [loader, setLoader] = useState(false)
 
+    // Fetch student details
     useEffect(() => {
         if (situation === "Student") {
             setStudentID(params.id);
-            const stdID = params.id
-            dispatch(getUserDetails(stdID, "Student"));
-        }
-        else if (situation === "Subject") {
+            dispatch(getUserDetails(params.id, "Student"));
+        } else if (situation === "Subject") {
             const { studentID, subjectID } = params
             setStudentID(studentID);
             dispatch(getUserDetails(studentID, "Student"));
             setChosenSubName(subjectID);
         }
-    }, [situation]);
+    }, [situation, params, dispatch]);
 
+    // Fetch subjects for the class
     useEffect(() => {
-        if (userDetails && userDetails.sclassName && situation === "Student") {
+        if (userDetails?.sclassName && situation === "Student") {
             dispatch(getSubjectList(userDetails.sclassName._id, "ClassSubjects"));
         }
-    }, [dispatch, userDetails]);
+    }, [dispatch, userDetails, situation]);
 
+    // Change handler for subjects
     const changeHandler = (event) => {
         const selectedSubject = subjectsList.find(
             (subject) => subject.subName === event.target.value
@@ -67,131 +68,124 @@ const StudentAttendance = ({ situation }) => {
         dispatch(updateStudentFields(studentID, fields, "StudentAttendance"))
     }
 
+    // Handle response messages
     useEffect(() => {
         if (response) {
             setLoader(false)
             setShowPopup(true)
             setMessage(response)
-        }
-        else if (error) {
+        } else if (error) {
             setLoader(false)
             setShowPopup(true)
-            setMessage("error")
-        }
-        else if (statestatus === "added") {
+            setMessage("Network Error")
+        } else if (statestatus === "added") {
             setLoader(false)
             setShowPopup(true)
-            setMessage("Done Successfully")
+            setMessage("Attendance Updated Successfully")
         }
     }, [response, statestatus, error])
 
     return (
         <>
-            {loading
-                ?
-                <>
-                    <div>Loading...</div>
-                </>
-                :
-                <>
+            {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+                    <CircularProgress />
+                </Box>
+            ) : (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        px: 2,
+                        py: { xs: 5, sm: 10 },
+                    }}
+                >
                     <Box
                         sx={{
-                            flex: '1 1 auto',
-                            alignItems: 'center',
-                            display: 'flex',
-                            justifyContent: 'center'
+                            width: { xs: '100%', sm: 500, md: 550 },
+                            p: { xs: 2, sm: 3, md: 4 },
+                            boxShadow: 3,
+                            borderRadius: 2,
+                            backgroundColor: '#fff'
                         }}
                     >
-                        <Box
-                            sx={{
-                                maxWidth: 550,
-                                px: 3,
-                                py: '100px',
-                                width: '100%'
-                            }}
-                        >
-                            <Stack spacing={1} sx={{ mb: 3 }}>
-                                <Typography variant="h4">
-                                    Student Name: {userDetails.name}
+                        <Stack spacing={2} sx={{ mb: 3 }}>
+                            <Typography variant={{ xs: 'h6', sm: 'h5', md: 'h4' }}>
+                                Student Name: {userDetails?.name || "Loading..."}
+                            </Typography>
+                            {currentUser?.teachSubject &&
+                                <Typography variant={{ xs: 'subtitle1', sm: 'h6', md: 'h5' }}>
+                                    Subject Name: {currentUser.teachSubject?.subName}
                                 </Typography>
-                                {currentUser.teachSubject &&
-                                    <Typography variant="h4">
-                                        Subject Name: {currentUser.teachSubject?.subName}
-                                    </Typography>
-                                }
-                            </Stack>
-                            <form onSubmit={submitHandler}>
-                                <Stack spacing={3}>
-                                    {
-                                        situation === "Student" &&
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Select Subject</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
-                                                value={subjectName}
-                                                label="Choose an option"
-                                                onChange={changeHandler} required
-                                            >
-                                                {subjectsList ?
-                                                    subjectsList.map((subject, index) => (
-                                                        <MenuItem key={index} value={subject.subName}>
-                                                            {subject.subName}
-                                                        </MenuItem>
-                                                    ))
-                                                    :
-                                                    <MenuItem value="Select Subject">
-                                                        Add Subjects For Attendance
-                                                    </MenuItem>
-                                                }
-                                            </Select>
-                                        </FormControl>
-                                    }
+                            }
+                        </Stack>
+
+                        <form onSubmit={submitHandler}>
+                            <Stack spacing={3}>
+                                {situation === "Student" &&
                                     <FormControl fullWidth>
-                                        <InputLabel id="demo-simple-select-label">Attendance Status</InputLabel>
+                                        <InputLabel>Select Subject</InputLabel>
                                         <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={status}
-                                            label="Choose an option"
-                                            onChange={(event) => setStatus(event.target.value)}
+                                            value={subjectName}
+                                            onChange={changeHandler}
                                             required
                                         >
-                                            <MenuItem value="Present">Present</MenuItem>
-                                            <MenuItem value="Absent">Absent</MenuItem>
+                                            {subjectsList && subjectsList.length > 0 ? (
+                                                subjectsList.map((subject, index) => (
+                                                    <MenuItem key={index} value={subject.subName}>
+                                                        {subject.subName}
+                                                    </MenuItem>
+                                                ))
+                                            ) : (
+                                                <MenuItem value="">
+                                                    Add Subjects For Attendance
+                                                </MenuItem>
+                                            )}
                                         </Select>
                                     </FormControl>
-                                    <FormControl>
-                                        <TextField
-                                            label="Select Date"
-                                            type="date"
-                                            value={date}
-                                            onChange={(event) => setDate(event.target.value)} required
-                                            InputLabelProps={{
-                                                shrink: true,
-                                            }}
-                                        />
-                                    </FormControl>
-                                </Stack>
+                                }
 
-                                <PurpleButton
-                                    fullWidth
-                                    size="large"
-                                    sx={{ mt: 3 }}
-                                    variant="contained"
-                                    type="submit"
-                                    disabled={loader}
-                                >
-                                    {loader ? <CircularProgress size={24} color="inherit" /> : "Submit"}
-                                </PurpleButton>
-                            </form>
-                        </Box>
+                                <FormControl fullWidth>
+                                    <InputLabel>Attendance Status</InputLabel>
+                                    <Select
+                                        value={status}
+                                        onChange={(e) => setStatus(e.target.value)}
+                                        required
+                                    >
+                                        <MenuItem value="Present">Present</MenuItem>
+                                        <MenuItem value="Absent">Absent</MenuItem>
+                                    </Select>
+                                </FormControl>
+
+                                <FormControl fullWidth>
+                                    <TextField
+                                        label="Select Date"
+                                        type="date"
+                                        value={date}
+                                        onChange={(e) => setDate(e.target.value)}
+                                        InputLabelProps={{ shrink: true }}
+                                        required
+                                    />
+                                </FormControl>
+                            </Stack>
+
+                            <PurpleButton
+                                fullWidth
+                                size="large"
+                                sx={{ mt: 3 }}
+                                variant="contained"
+                                type="submit"
+                                disabled={loader}
+                            >
+                                {loader ? <CircularProgress size={24} color="inherit" /> : "Submit"}
+                            </PurpleButton>
+                        </form>
                     </Box>
-                    <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} />
-                </>
-            }
+                </Box>
+            )}
+            <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} />
         </>
     )
 }
 
-export default StudentAttendance
+export default StudentAttendance;

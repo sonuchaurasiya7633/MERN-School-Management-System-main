@@ -5,26 +5,26 @@ import { registerUser } from '../../../redux/userRelated/userHandle';
 import Popup from '../../../components/Popup';
 import { underControl } from '../../../redux/userRelated/userSlice';
 import { getAllSclasses } from '../../../redux/sclassRelated/sclassHandle';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Box, Typography, TextField, MenuItem, Button } from '@mui/material';
+import styled from 'styled-components';
 
 const AddStudent = ({ situation }) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const params = useParams()
 
-    const userState = useSelector(state => state.user);
-    const { status, currentUser, response, error } = userState;
+    const { status, currentUser, response, error } = useSelector(state => state.user);
     const { sclassesList } = useSelector((state) => state.sclass);
 
     const [name, setName] = useState('');
     const [rollNum, setRollNum] = useState('');
-    const [password, setPassword] = useState('')
-    const [className, setClassName] = useState('')
-    const [sclassName, setSclassName] = useState('')
+    const [password, setPassword] = useState('');
+    const [className, setClassName] = useState('');
+    const [sclassName, setSclassName] = useState('');
 
-    const adminID = currentUser._id
-    const role = "Student"
-    const attendance = []
+    const adminID = currentUser._id;
+    const role = "Student";
+    const attendance = [];
 
     useEffect(() => {
         if (situation === "Class") {
@@ -85,58 +85,112 @@ const AddStudent = ({ situation }) => {
     }, [status, navigate, error, response, dispatch]);
 
     return (
-        <>
-            <div className="register">
-                <form className="registerForm" onSubmit={submitHandler}>
-                    <span className="registerTitle">Add Student</span>
-                    <label>Name</label>
-                    <input className="registerInput" type="text" placeholder="Enter student's name..."
-                        value={name}
-                        onChange={(event) => setName(event.target.value)}
-                        autoComplete="name" required />
+        <Container>
+            <FormWrapper>
+                <Typography variant="h5" align="center" gutterBottom>
+                    Add Student
+                </Typography>
+                <form onSubmit={submitHandler}>
+                    <FieldWrapper>
+                        <TextField
+                            fullWidth
+                            label="Name"
+                            placeholder="Enter student's name..."
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                    </FieldWrapper>
 
-                    {
-                        situation === "Student" &&
-                        <>
-                            <label>Class</label>
-                            <select
-                                className="registerInput"
+                    {situation === "Student" &&
+                        <FieldWrapper>
+                            <TextField
+                                select
+                                fullWidth
+                                label="Class"
                                 value={className}
-                                onChange={changeHandler} required>
-                                <option value='Select Class'>Select Class</option>
-                                {sclassesList.map((classItem, index) => (
-                                    <option key={index} value={classItem.sclassName}>
+                                onChange={changeHandler}
+                                required
+                            >
+                                <MenuItem value="Select Class">Select Class</MenuItem>
+                                {sclassesList.map((classItem) => (
+                                    <MenuItem key={classItem._id} value={classItem.sclassName}>
                                         {classItem.sclassName}
-                                    </option>
+                                    </MenuItem>
                                 ))}
-                            </select>
-                        </>
+                            </TextField>
+                        </FieldWrapper>
                     }
 
-                    <label>Roll Number</label>
-                    <input className="registerInput" type="number" placeholder="Enter student's Roll Number..."
-                        value={rollNum}
-                        onChange={(event) => setRollNum(event.target.value)}
-                        required />
+                    <FieldWrapper>
+                        <TextField
+                            fullWidth
+                            type="number"
+                            label="Roll Number"
+                            placeholder="Enter student's Roll Number..."
+                            value={rollNum}
+                            onChange={(e) => setRollNum(e.target.value)}
+                            required
+                        />
+                    </FieldWrapper>
 
-                    <label>Password</label>
-                    <input className="registerInput" type="password" placeholder="Enter student's password..."
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        autoComplete="new-password" required />
+                    <FieldWrapper>
+                        <TextField
+                            fullWidth
+                            type="password"
+                            label="Password"
+                            placeholder="Enter student's password..."
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            autoComplete="new-password"
+                            required
+                        />
+                    </FieldWrapper>
 
-                    <button className="registerButton" type="submit" disabled={loader}>
-                        {loader ? (
-                            <CircularProgress size={24} color="inherit" />
-                        ) : (
-                            'Add'
-                        )}
-                    </button>
+                    <ButtonWrapper>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            disabled={loader}
+                        >
+                            {loader ? <CircularProgress size={24} color="inherit" /> : "Add"}
+                        </Button>
+                    </ButtonWrapper>
                 </form>
-            </div>
+            </FormWrapper>
             <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} />
-        </>
+        </Container>
     )
 }
 
-export default AddStudent
+export default AddStudent;
+
+// Styled Components
+const Container = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  @media (max-width: 600px) {
+    padding: 1rem;
+  }
+`;
+
+const FormWrapper = styled(Box)`
+  width: 100%;
+  max-width: 500px;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0px 4px 16px rgba(0,0,0,0.1);
+`;
+
+const FieldWrapper = styled(Box)`
+  margin-bottom: 1.5rem;
+`;
+
+const ButtonWrapper = styled(Box)`
+  margin-top: 1rem;
+`;

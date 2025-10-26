@@ -7,6 +7,7 @@ import {
   Container,
   CircularProgress,
   Backdrop,
+  Typography
 } from '@mui/material';
 import { AccountCircle, School, Group } from '@mui/icons-material';
 import styled from 'styled-components';
@@ -19,63 +20,43 @@ const ChooseUser = ({ visitor }) => {
   const navigate = useNavigate()
   const password = "zxc"
 
-  const { status, currentUser, currentRole } = useSelector(state => state.user);;
+  const { status, currentUser, currentRole } = useSelector(state => state.user);
 
   const [loader, setLoader] = useState(false)
   const [showPopup, setShowPopup] = useState(false);
   const [message, setMessage] = useState("");
 
   const navigateHandler = (user) => {
+    let fields = {};
     if (user === "Admin") {
       if (visitor === "guest") {
-        const email = "yogendra@12"
-        const fields = { email, password }
+        fields = { email: "yogendra@12", password };
         setLoader(true)
         dispatch(loginUser(fields, user))
-      }
-      else {
-        navigate('/Adminlogin');
-      }
+      } else navigate('/Adminlogin');
     }
-
     else if (user === "Student") {
       if (visitor === "guest") {
-        const rollNum = "1"
-        const studentName = "Dipesh Awasthi"
-        const fields = { rollNum, studentName, password }
+        fields = { rollNum: "1", studentName: "Dipesh Awasthi", password };
         setLoader(true)
         dispatch(loginUser(fields, user))
-      }
-      else {
-        navigate('/Studentlogin');
-      }
+      } else navigate('/Studentlogin');
     }
-
     else if (user === "Teacher") {
       if (visitor === "guest") {
-        const email = "tony@12"
-        const fields = { email, password }
+        fields = { email: "tony@12", password };
         setLoader(true)
         dispatch(loginUser(fields, user))
-      }
-      else {
-        navigate('/Teacherlogin');
-      }
+      } else navigate('/Teacherlogin');
     }
   }
 
   useEffect(() => {
     if (status === 'success' || currentUser !== null) {
-      if (currentRole === 'Admin') {
-        navigate('/Admin/dashboard');
-      }
-      else if (currentRole === 'Student') {
-        navigate('/Student/dashboard');
-      } else if (currentRole === 'Teacher') {
-        navigate('/Teacher/dashboard');
-      }
-    }
-    else if (status === 'error') {
+      if (currentRole === 'Admin') navigate('/Admin/dashboard');
+      else if (currentRole === 'Student') navigate('/Student/dashboard');
+      else if (currentRole === 'Teacher') navigate('/Teacher/dashboard');
+    } else if (status === 'error') {
       setLoader(false)
       setMessage("Network Error")
       setShowPopup(true)
@@ -85,55 +66,35 @@ const ChooseUser = ({ visitor }) => {
   return (
     <StyledContainer>
       <Container>
-        <Grid container spacing={2} justifyContent="center">
-          <Grid item xs={12} sm={6} md={4}>
-            <div onClick={() => navigateHandler("Admin")}>
-              <StyledPaper elevation={3}>
-                <Box mb={2}>
-                  <AccountCircle fontSize="large" />
+        <Grid container spacing={4} justifyContent="center">
+          {[
+            { role: "Admin", icon: <AccountCircle fontSize="large" />, desc: "Login as an administrator to access the dashboard to manage app data." },
+            { role: "Student", icon: <School fontSize="large" />, desc: "Login as a student to explore course materials and assignments." },
+            { role: "Teacher", icon: <Group fontSize="large" />, desc: "Login as a teacher to create courses, assignments, and track student progress." }
+          ].map((item, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <StyledPaper elevation={6} onClick={() => navigateHandler(item.role)}>
+                <Box mb={2} color="white">
+                  {item.icon}
                 </Box>
-                <StyledTypography>
-                  Admin
-                </StyledTypography>
-                Login as an administrator to access the dashboard to manage app data.
+                <Typography variant="h5" mb={1} color="white">{item.role}</Typography>
+                <Typography variant="body2" color="rgba(255,255,255,0.7)">
+                  {item.desc}
+                </Typography>
               </StyledPaper>
-            </div>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <StyledPaper elevation={3}>
-              <div onClick={() => navigateHandler("Student")}>
-                <Box mb={2}>
-                  <School fontSize="large" />
-                </Box>
-                <StyledTypography>
-                  Student
-                </StyledTypography>
-                Login as a student to explore course materials and assignments.
-              </div>
-            </StyledPaper>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <StyledPaper elevation={3}>
-              <div onClick={() => navigateHandler("Teacher")}>
-                <Box mb={2}>
-                  <Group fontSize="large" />
-                </Box>
-                <StyledTypography>
-                  Teacher
-                </StyledTypography>
-                Login as a teacher to create courses, assignments, and track student progress.
-              </div>
-            </StyledPaper>
-          </Grid>
+            </Grid>
+          ))}
         </Grid>
       </Container>
+
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loader}
       >
         <CircularProgress color="inherit" />
-        Please Wait
+        <Typography ml={2}>Please Wait...</Typography>
       </Backdrop>
+
       <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} />
     </StyledContainer>
   );
@@ -141,27 +102,33 @@ const ChooseUser = ({ visitor }) => {
 
 export default ChooseUser;
 
+// Styled components
 const StyledContainer = styled.div`
-  background: linear-gradient(to bottom, #411d70, #19118b);
-  height: 120vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
+  align-items: center;
+  background: linear-gradient(to bottom, #411d70, #19118b);
   padding: 2rem;
 `;
 
 const StyledPaper = styled(Paper)`
-  padding: 20px;
+  padding: 30px 20px;
   text-align: center;
   background-color: #1f1f38;
-  color:rgba(255, 255, 255, 0.6);
-  cursor:pointer;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  border-radius: 15px;
 
   &:hover {
     background-color: #2c2c6c;
-    color:white;
+    color: white;
+    transform: translateY(-5px);
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
   }
-`;
 
-const StyledTypography = styled.h2`
-  margin-bottom: 10px;
+  @media (max-width: 900px) {
+    padding: 25px 15px;
+  }
 `;

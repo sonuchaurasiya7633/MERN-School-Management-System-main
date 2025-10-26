@@ -1,104 +1,135 @@
 import styled from 'styled-components';
 import { Button } from '@mui/material';
 
-export const RedButton = styled(Button)`
+/* 🔥 Base button style (applied to all buttons) */
+const BaseButton = styled(Button)`
   && {
-    background-color: #f00;
+    border-radius: 10px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease-in-out;
+    padding: 8px 18px;
+    font-size: 0.95rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+    }
+
+    @media (max-width: 600px) {
+      font-size: 0.85rem;
+      padding: 7px 14px;
+      border-radius: 8px;
+    }
+  }
+`;
+
+/* 🔴 Red Button */
+export const RedButton = styled(BaseButton)`
+  && {
+    background-color: #ff2d2d;
     color: white;
-    margin-left: 4px;
+
     &:hover {
       background-color: #eb7979;
-      border-color: #f26767;
-      box-shadow: none;
     }
   }
 `;
 
-export const BlackButton = styled(Button)`
+/* ⚫ Black Button */
+export const BlackButton = styled(BaseButton)`
   && {
     background-color: #000000;
-    color: white;
-    margin-left: 4px;
+    color: #ffffff;
+
     &:hover {
       background-color: #212020;
-      border-color: #212020;
-      box-shadow: none;
     }
   }
 `;
 
-export const DarkRedButton = styled(Button)`
+/* 🔺 Dark Red Button */
+export const DarkRedButton = styled(BaseButton)`
   && {
     background-color: #650909;
     color: white;
+
     &:hover {
-      background-color: #eb7979;
-      border-color: #f26767;
-      box-shadow: none;
+      background-color: #a62c2c;
     }
   }
 `;
 
-export const BlueButton = styled(Button)`
+/* 🔵 Blue Button */
+export const BlueButton = styled(BaseButton)`
   && {
-    background-color: #080a43;
+    background: linear-gradient(135deg, #0a1e82, #080a43);
     color: #fff;
+
     &:hover {
-      background-color: #0a1e82;
+      background: linear-gradient(135deg, #101fab, #0a1e82);
     }
   }
 `;
 
-export const PurpleButton = styled(Button)`
+/* 🟣 Purple Button */
+export const PurpleButton = styled(BaseButton)`
   && {
-    background-color: #270843;
+    background: linear-gradient(135deg, #3f1068, #270843);
     color: #fff;
+
     &:hover {
-      background-color: #3f1068;
+      background: linear-gradient(135deg, #5a1b9a, #3f1068);
     }
   }
 `;
 
-export const LightPurpleButton = styled(Button)`
+/* 💜 Light Purple Button */
+export const LightPurpleButton = styled(BaseButton)`
   && {
-    background-color: #7f56da;
+    background: linear-gradient(135deg, #7f56da, #9c6df5);
     color: #fff;
+
     &:hover {
-      background-color: #7a1ccb;
+      background: linear-gradient(135deg, #7a1ccb, #8f3de0);
     }
   }
 `;
 
-export const GreenButton = styled(Button)`
+/* 🟢 Green Button */
+export const GreenButton = styled(BaseButton)`
   && {
-    background-color: #133104;
+    background: linear-gradient(135deg, #266810, #133104);
     color: #fff;
+
     &:hover {
-      background-color: #266810;
+      background: linear-gradient(135deg, #358d16, #1b4208);
     }
   }
 `;
 
-export const BrownButton = styled(Button)`
+/* 🟤 Brown Button */
+export const BrownButton = styled(BaseButton)`
   && {
-    background-color: #2c1006;
+    background: linear-gradient(135deg, #40220c, #2c1006);
     color: white;
+
     &:hover {
-      background-color: #40220c;
-      border-color: #40220c;
-      box-shadow: none;
+      background: linear-gradient(135deg, #5a3112, #3a1a08);
     }
   }
 `;
 
-export const IndigoButton = styled(Button)`
+/* 🟪 Indigo Button */
+export const IndigoButton = styled(BaseButton)`
   && {
-    background-color: #2f2b80;
+    background: linear-gradient(135deg, #534ea6, #2f2b80);
     color: white;
+
     &:hover {
-      background-color: #534ea6;
-      border-color: #473d90;
-      box-shadow: none;
+      background: linear-gradient(135deg, #6e67c2, #3d389a);
     }
   }
 `;

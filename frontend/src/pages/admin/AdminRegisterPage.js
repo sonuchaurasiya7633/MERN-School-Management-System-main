@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'; 
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,7 +18,7 @@ const AdminRegisterPage = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const { status, currentUser, response, error, currentRole } = useSelector(state => state.user);;
+    const { status, currentUser, response, error, currentRole } = useSelector(state => state.user);
 
     const [toggle, setToggle] = useState(false)
     const [loader, setLoader] = useState(false)
@@ -78,26 +78,25 @@ const AdminRegisterPage = () => {
         <ThemeProvider theme={defaultTheme}>
             <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-                    <Box
-                        sx={{
-                            my: 8,
-                            mx: 4,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Typography variant="h4" sx={{ mb: 2, color: "#2c2143" }}>
+                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={12} square
+                    sx={{
+                        borderRadius: { xs: 0, sm: '24px 0 0 24px' },
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        padding: { xs: 2, sm: 4, md: 6 },
+                        backgroundColor: 'white',
+                    }}
+                >
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <Typography variant="h4" sx={{ mb: 2, color: "#2c2143", fontWeight: 600, textAlign: 'center' }}>
                             Admin Register
                         </Typography>
-                        <Typography variant="h7">
-                            Create your own school by registering as an admin.
-                            <br />
-                            You will be able to add students and faculty and
-                            manage the system.
+                        <Typography variant="body1" sx={{ textAlign: 'center', color: '#555', mb: 3 }}>
+                            Create your own school by registering as an admin.<br />
+                            You will be able to add students and faculty and manage the system.
                         </Typography>
-                        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 2 }}>
+                        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
                             <TextField
                                 margin="normal"
                                 required
@@ -110,6 +109,7 @@ const AdminRegisterPage = () => {
                                 error={adminNameError}
                                 helperText={adminNameError && 'Name is required'}
                                 onChange={handleInputChange}
+                                sx={{ mb: 2 }}
                             />
                             <TextField
                                 margin="normal"
@@ -122,6 +122,7 @@ const AdminRegisterPage = () => {
                                 error={schoolNameError}
                                 helperText={schoolNameError && 'School name is required'}
                                 onChange={handleInputChange}
+                                sx={{ mb: 2 }}
                             />
                             <TextField
                                 margin="normal"
@@ -134,6 +135,7 @@ const AdminRegisterPage = () => {
                                 error={emailError}
                                 helperText={emailError && 'Email is required'}
                                 onChange={handleInputChange}
+                                sx={{ mb: 2 }}
                             />
                             <TextField
                                 margin="normal"
@@ -147,21 +149,21 @@ const AdminRegisterPage = () => {
                                 error={passwordError}
                                 helperText={passwordError && 'Password is required'}
                                 onChange={handleInputChange}
+                                sx={{ mb: 2 }}
                                 InputProps={{
                                     endAdornment: (
                                         <InputAdornment position="end">
-                                            <IconButton onClick={() => setToggle(!toggle)}>
-                                                {toggle ? (
-                                                    <Visibility />
-                                                ) : (
-                                                    <VisibilityOff />
-                                                )}
+                                            <IconButton
+                                                onClick={() => setToggle(!toggle)}
+                                                aria-label={toggle ? "Hide password" : "Show password"}
+                                            >
+                                                {toggle ? <Visibility /> : <VisibilityOff />}
                                             </IconButton>
                                         </InputAdornment>
                                     ),
                                 }}
                             />
-                            <Grid container sx={{ display: "flex", justifyContent: "space-between" }}>
+                            <Grid container sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
                                 <FormControlLabel
                                     control={<Checkbox value="remember" color="primary" />}
                                     label="Remember me"
@@ -171,19 +173,25 @@ const AdminRegisterPage = () => {
                                 type="submit"
                                 fullWidth
                                 variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
+                                sx={{
+                                    mt: 1,
+                                    mb: 2,
+                                    height: 48,
+                                    fontWeight: 600,
+                                    fontSize: '1rem',
+                                    transition: 'all 0.3s ease',
+                                    '&:hover': { backgroundColor: '#6b4bd8' }
+                                }}
                             >
                                 {loader ? <CircularProgress size={24} color="inherit"/> : "Register"}
                             </LightPurpleButton>
-                            <Grid container>
-                                <Grid>
+                            <Grid container justifyContent="center" alignItems="center">
+                                <Typography variant="body2">
                                     Already have an account?
-                                </Grid>
-                                <Grid item sx={{ ml: 2 }}>
-                                    <StyledLink to="/Adminlogin">
-                                        Log in
-                                    </StyledLink>
-                                </Grid>
+                                </Typography>
+                                <StyledLink to="/Adminlogin">
+                                    Log in
+                                </StyledLink>
                             </Grid>
                         </Box>
                     </Box>
@@ -194,12 +202,22 @@ const AdminRegisterPage = () => {
                     sm={4}
                     md={7}
                     sx={{
+                        position: 'relative',
                         backgroundImage: `url(${bgpic})`,
                         backgroundRepeat: 'no-repeat',
                         backgroundColor: (t) =>
                             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
+                        '&::after': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: 'rgba(0,0,0,0.3)',
+                        }
                     }}
                 />
             </Grid>
@@ -211,7 +229,11 @@ const AdminRegisterPage = () => {
 export default AdminRegisterPage
 
 const StyledLink = styled(Link)`
-  margin-top: 9px;
+  margin-left: 8px;
   text-decoration: none;
   color: #7f56da;
+  font-weight: 500;
+  &:hover {
+    text-decoration: underline;
+  }
 `;

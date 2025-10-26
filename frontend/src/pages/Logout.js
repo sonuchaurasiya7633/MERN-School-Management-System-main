@@ -20,54 +20,75 @@ const Logout = () => {
     };
 
     return (
-        <LogoutContainer>
-            <h1>{currentUser.name}</h1>
-            <LogoutMessage>Are you sure you want to log out?</LogoutMessage>
-            <LogoutButtonLogout onClick={handleLogout}>Log Out</LogoutButtonLogout>
-            <LogoutButtonCancel onClick={handleCancel}>Cancel</LogoutButtonCancel>
-        </LogoutContainer>
+        <LogoutWrapper>
+            <LogoutBox>
+                <UserName>{currentUser?.name || "User"}</UserName>
+                <LogoutMessage>Are you sure you want to log out?</LogoutMessage>
+                <ButtonContainer>
+                    <LogoutButton onClick={handleLogout} variant="logout">Log Out</LogoutButton>
+                    <LogoutButton onClick={handleCancel} variant="cancel">Cancel</LogoutButton>
+                </ButtonContainer>
+            </LogoutBox>
+        </LogoutWrapper>
     );
 };
 
 export default Logout;
 
-const LogoutContainer = styled.div`
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 20px;
+// Styled Components
+const LogoutWrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-  background-color: #85769f66;
-  color: black;
+  background: linear-gradient(135deg, #8e44ad, #6c3483);
+`;
+
+const LogoutBox = styled.div`
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 16px;
+  box-shadow: 0px 10px 25px rgba(0,0,0,0.2);
+  text-align: center;
+  min-width: 320px;
+  max-width: 400px;
+`;
+
+const UserName = styled.h2`
+  margin-bottom: 10px;
+  color: #4a148c;
+  font-size: 1.8rem;
+  font-weight: 700;
 `;
 
 const LogoutMessage = styled.p`
-  margin-bottom: 20px;
-  font-size: 16px;
-  text-align: center;
+  margin-bottom: 30px;
+  font-size: 1rem;
+  color: #555;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
 `;
 
 const LogoutButton = styled.button`
-  padding: 10px 20px;
-  margin-top: 10px;
-  border-radius: 5px;
-  font-size: 16px;
-  color: #fff;
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
+  border: none;
+  color: #fff;
+  transition: all 0.3s ease;
+
+  background-color: ${({ variant }) => variant === 'logout' ? '#e53935' : '#7b1fa2'};
 
   &:hover {
-    color: #fff;
-    background-color: #333;
+    background-color: ${({ variant }) => variant === 'logout' ? '#b71c1c' : '#4a148c'};
   }
-`;
-
-const LogoutButtonLogout = styled(LogoutButton)`
-  background-color: #ea0606;
-`;
-
-const LogoutButtonCancel = styled(LogoutButton)`
-  background-color: rgb(99, 60, 99);
 `;

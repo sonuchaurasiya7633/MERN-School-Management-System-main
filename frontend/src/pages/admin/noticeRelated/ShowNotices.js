@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import {
-    Paper, Box, IconButton
+    Paper, Box
 } from '@mui/material';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -11,6 +11,7 @@ import { deleteUser } from '../../../redux/userRelated/userHandle';
 import TableTemplate from '../../../components/TableTemplate';
 import { GreenButton } from '../../../components/buttonStyles';
 import SpeedDialTemplate from '../../../components/SpeedDialTemplate';
+import styled from 'styled-components';
 
 const ShowNotices = () => {
 
@@ -53,11 +54,16 @@ const ShowNotices = () => {
 
     const NoticeButtonHaver = ({ row }) => {
         return (
-            <>
-                <IconButton onClick={() => deleteHandler(row.id, "Notice")}>
-                    <DeleteIcon color="error" />
-                </IconButton>
-            </>
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <GreenButton
+                    variant="outlined"
+                    onClick={() => deleteHandler(row.id, "Notice")}
+                    color="error"
+                    size="small"
+                >
+                    <DeleteIcon fontSize="small" />
+                </GreenButton>
+            </Box>
         );
     };
 
@@ -73,20 +79,22 @@ const ShowNotices = () => {
     ];
 
     return (
-        <>
+        <Wrapper>
             {loading ?
                 <div>Loading...</div>
                 :
                 <>
                     {response ?
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
-                            <GreenButton variant="contained"
-                                onClick={() => navigate("/Admin/addnotice")}>
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 2 }}>
+                            <GreenButton
+                                variant="contained"
+                                onClick={() => navigate("/Admin/addnotice")}
+                            >
                                 Add Notice
                             </GreenButton>
                         </Box>
                         :
-                        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                        <Paper sx={{ width: '100%', overflow: 'hidden', padding: 2, borderRadius: 2 }}>
                             {Array.isArray(noticesList) && noticesList.length > 0 &&
                                 <TableTemplate buttonHaver={NoticeButtonHaver} columns={noticeColumns} rows={noticeRows} />
                             }
@@ -95,8 +103,15 @@ const ShowNotices = () => {
                     }
                 </>
             }
-        </>
+        </Wrapper>
     );
 };
 
 export default ShowNotices;
+
+const Wrapper = styled(Box)`
+  padding: 2rem;
+  @media (max-width: 600px) {
+    padding: 1rem;
+  }
+`;

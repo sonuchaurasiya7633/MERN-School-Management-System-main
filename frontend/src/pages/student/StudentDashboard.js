@@ -17,78 +17,75 @@ import StudentProfile from './StudentProfile';
 import StudentSubjects from './StudentSubjects';
 import ViewStdAttendance from './ViewStdAttendance';
 import StudentComplain from './StudentComplain';
-import Logout from '../Logout'
+import Logout from '../Logout';
 import AccountMenu from '../../components/AccountMenu';
 import { AppBar, Drawer } from '../../components/styles';
 
 const StudentDashboard = () => {
     const [open, setOpen] = useState(true);
-    const toggleDrawer = () => {
-        setOpen(!open);
-    };
+    const toggleDrawer = () => setOpen(!open);
 
     return (
-        <>
-            <Box sx={{ display: 'flex' }}>
-                <CssBaseline />
-                <AppBar open={open} position='absolute'>
-                    <Toolbar sx={{ pr: '24px' }}>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={toggleDrawer}
-                            sx={{
-                                marginRight: '36px',
-                                ...(open && { display: 'none' }),
-                            }}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography
-                            component="h1"
-                            variant="h6"
-                            color="inherit"
-                            noWrap
-                            sx={{ flexGrow: 1 }}
-                        >
-                            Student Dashboard
-                        </Typography>
-                        <AccountMenu />
-                    </Toolbar>
-                </AppBar>
-                <Drawer variant="permanent" open={open} sx={open ? styles.drawerStyled : styles.hideDrawer}>
-                    <Toolbar sx={styles.toolBarStyled}>
-                        <IconButton onClick={toggleDrawer}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                    </Toolbar>
-                    <Divider />
-                    <List component="nav">
-                        <StudentSideBar />
-                    </List>
-                </Drawer>
-                <Box component="main" sx={styles.boxStyled}>
-                    <Toolbar />
-                    <Routes>
-                        <Route path="/" element={<StudentHomePage />} />
-                        <Route path='*' element={<Navigate to="/" />} />
-                        <Route path="/Student/dashboard" element={<StudentHomePage />} />
-                        <Route path="/Student/profile" element={<StudentProfile />} />
+        <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f4f5f7' }}>
+            <CssBaseline />
+            <AppBar open={open} position='absolute' elevation={3}>
+                <Toolbar sx={{ pr: '24px' }}>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={toggleDrawer}
+                        sx={{ marginRight: '36px', ...(open && { display: 'none' }) }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography
+                        component="h1"
+                        variant="h6"
+                        color="inherit"
+                        noWrap
+                        sx={{ flexGrow: 1, fontWeight: 600 }}
+                    >
+                        Student Dashboard
+                    </Typography>
+                    <AccountMenu />
+                </Toolbar>
+            </AppBar>
 
-                        <Route path="/Student/subjects" element={<StudentSubjects />} />
-                        <Route path="/Student/attendance" element={<ViewStdAttendance />} />
-                        <Route path="/Student/complain" element={<StudentComplain />} />
+            <Drawer
+                variant="permanent"
+                open={open}
+                sx={open ? styles.drawerStyled : styles.hideDrawer}
+            >
+                <Toolbar sx={styles.toolBarStyled}>
+                    <IconButton onClick={toggleDrawer}>
+                        <ChevronLeftIcon />
+                    </IconButton>
+                </Toolbar>
+                <Divider />
+                <List component="nav">
+                    <StudentSideBar />
+                </List>
+            </Drawer>
 
-                        <Route path="/logout" element={<Logout />} />
-                    </Routes>
-                </Box>
+            <Box component="main" sx={styles.boxStyled}>
+                <Toolbar />
+                <Routes>
+                    <Route path="/" element={<StudentHomePage />} />
+                    <Route path='*' element={<Navigate to="/" />} />
+                    <Route path="/Student/dashboard" element={<StudentHomePage />} />
+                    <Route path="/Student/profile" element={<StudentProfile />} />
+                    <Route path="/Student/subjects" element={<StudentSubjects />} />
+                    <Route path="/Student/attendance" element={<ViewStdAttendance />} />
+                    <Route path="/Student/complain" element={<StudentComplain />} />
+                    <Route path="/logout" element={<Logout />} />
+                </Routes>
             </Box>
-        </>
+        </Box>
     );
-}
+};
 
-export default StudentDashboard
+export default StudentDashboard;
 
 const styles = {
     boxStyled: {
@@ -97,8 +94,9 @@ const styles = {
                 ? theme.palette.grey[100]
                 : theme.palette.grey[900],
         flexGrow: 1,
-        height: '100vh',
+        minHeight: '100vh',
         overflow: 'auto',
+        p: { xs: 2, sm: 3 },
     },
     toolBarStyled: {
         display: 'flex',
@@ -107,7 +105,13 @@ const styles = {
         px: [1],
     },
     drawerStyled: {
-        display: "flex"
+        display: 'flex',
+        width: 240,
+        '& .MuiDrawer-paper': {
+            width: 240,
+            boxSizing: 'border-box',
+            backgroundColor: '#fff',
+        },
     },
     hideDrawer: {
         display: 'flex',
@@ -115,4 +119,4 @@ const styles = {
             display: 'none',
         },
     },
-}
+};

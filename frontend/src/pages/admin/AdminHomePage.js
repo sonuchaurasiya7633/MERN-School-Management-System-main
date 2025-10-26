@@ -91,15 +91,31 @@ const StyledPaper = styled(Paper)`
   justify-content: space-between;
   align-items: center;
   text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+  }
 `;
 
 const Title = styled.p`
   font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
 `;
 
 const Data = styled(CountUp)`
-  font-size: calc(1.3rem + .6vw);
-  color: green;
+  font-size: calc(1.5rem + 0.5vw);
+  color: #4caf50;
+  font-weight: 700;
 `;
+
 
 export default AdminHomePage

@@ -6,6 +6,8 @@ import {
   MenuItem,
   ListItemIcon,
   Tooltip,
+  Stack,
+  Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,10 +40,6 @@ const ShowClasses = () => {
     dispatch(getAllSclasses(adminID, "Sclass"));
   }, [adminID, dispatch]);
 
-  if (error) {
-    console.log(error);
-  }
-
   const [showPopup, setShowPopup] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -67,14 +65,10 @@ const ShowClasses = () => {
   const sclassColumns = [{ id: "name", label: "Class Name", minWidth: 170 }];
 
   const sclassRows =
-    sclassesList &&
-    sclassesList.length > 0 &&
-    sclassesList.map((sclass) => {
-      return {
-        name: sclass.sclassName,
-        id: sclass._id,
-      };
-    });
+    sclassesList?.map((sclass) => ({
+      name: sclass.sclassName,
+      id: sclass._id,
+    })) || [];
 
   const SclassButtonHaver = ({ row }) => {
     const actions = [
@@ -94,6 +88,7 @@ const ShowClasses = () => {
         <IconButton
           onClick={() => deleteHandler(row.id, "Sclass")}
           color="secondary"
+          sx={{ transition: "transform 0.2s", "&:hover": { transform: "scale(1.1)" } }}
         >
           <DeleteIcon color="error" />
         </IconButton>
@@ -110,51 +105,57 @@ const ShowClasses = () => {
 
   const ActionMenu = ({ actions }) => {
     const [anchorEl, setAnchorEl] = useState(null);
-
     const open = Boolean(anchorEl);
+    const handleClick = (event) => setAnchorEl(event.currentTarget);
+    const handleClose = () => setAnchorEl(null);
 
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
     return (
       <>
-        <Box
-          sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
-        >
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <Tooltip title="Add Students & Subjects">
             <IconButton
               onClick={handleClick}
               size="small"
-              sx={{ ml: 2 }}
-              aria-controls={open ? "account-menu" : undefined}
+              sx={{ ml: 1, bgcolor: "background.paper", "&:hover": { bgcolor: "grey.100" } }}
+              aria-controls={open ? "action-menu" : undefined}
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
             >
-              <h5>Add</h5>
               <SpeedDialIcon />
             </IconButton>
           </Tooltip>
         </Box>
         <Menu
           anchorEl={anchorEl}
-          id="account-menu"
+          id="action-menu"
           open={open}
           onClose={handleClose}
-          onClick={handleClose}
           PaperProps={{
-            elevation: 0,
-            sx: styles.styledPaper,
+            elevation: 3,
+            sx: {
+              overflow: "visible",
+              mt: 1.5,
+              "&:before": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: "background.paper",
+                transform: "translateY(-50%) rotate(45deg)",
+                zIndex: 0,
+              },
+            },
           }}
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
-          {actions.map((action) => (
-            <MenuItem onClick={action.action}>
-              <ListItemIcon fontSize="small">{action.icon}</ListItemIcon>
-              {action.name}
+          {actions.map((action, idx) => (
+            <MenuItem key={idx} onClick={action.action}>
+              <ListItemIcon>{action.icon}</ListItemIcon>
+              <Typography variant="body2">{action.name}</Typography>
             </MenuItem>
           ))}
         </Menu>
@@ -178,27 +179,20 @@ const ShowClasses = () => {
   return (
     <>
       {loading ? (
-        <div>Loading...</div>
+        <Typography variant="h6" align="center" sx={{ mt: 4 }}>
+          Loading...
+        </Typography>
       ) : (
         <>
           {getresponse ? (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginTop: "16px",
-              }}
-            >
-              <GreenButton
-                variant="contained"
-                onClick={() => navigate("/Admin/addclass")}
-              >
+            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+              <GreenButton variant="contained" onClick={() => navigate("/Admin/addclass")}>
                 Add Class
               </GreenButton>
             </Box>
           ) : (
             <>
-              {Array.isArray(sclassesList) && sclassesList.length > 0 && (
+              {sclassesList?.length > 0 && (
                 <TableTemplate
                   buttonHaver={SclassButtonHaver}
                   columns={sclassColumns}
@@ -210,46 +204,16 @@ const ShowClasses = () => {
           )}
         </>
       )}
-      <Popup
-        message={message}
-        setShowPopup={setShowPopup}
-        showPopup={showPopup}
-      />
+      <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} />
     </>
   );
 };
 
 export default ShowClasses;
 
-const styles = {
-  styledPaper: {
-    overflow: "visible",
-    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-    mt: 1.5,
-    "& .MuiAvatar-root": {
-      width: 32,
-      height: 32,
-      ml: -0.5,
-      mr: 1,
-    },
-    "&:before": {
-      content: '""',
-      display: "block",
-      position: "absolute",
-      top: 0,
-      right: 14,
-      width: 10,
-      height: 10,
-      bgcolor: "background.paper",
-      transform: "translateY(-50%) rotate(45deg)",
-      zIndex: 0,
-    },
-  },
-};
-
-const ButtonContainer = styled.div`
-  display: flex;
+const ButtonContainer = styled(Stack)`
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
+  gap: 0.8rem;
+  flex-wrap: wrap;
 `;

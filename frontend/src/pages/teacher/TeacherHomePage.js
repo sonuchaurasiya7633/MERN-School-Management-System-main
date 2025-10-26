@@ -24,76 +24,84 @@ const TeacherHomePage = () => {
         dispatch(getClassStudents(classID));
     }, [dispatch, subjectID, classID]);
 
-    const numberOfStudents = sclassStudents && sclassStudents.length;
-    const numberOfSessions = subjectDetails && subjectDetails.sessions
+    const numberOfStudents = sclassStudents?.length || 0;
+    const numberOfSessions = subjectDetails?.sessions || 0;
 
     return (
-        <>
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} md={3} lg={3}>
-                        <StyledPaper>
-                            <img src={Students} alt="Students" />
-                            <Title>
-                                Class Students
-                            </Title>
-                            <Data start={0} end={numberOfStudents} duration={2.5} />
-                        </StyledPaper>
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Grid container spacing={3}>
+                {[{
+                    img: Students,
+                    title: "Class Students",
+                    value: numberOfStudents,
+                    duration: 2.5,
+                    color: "#4caf50"
+                },{
+                    img: Lessons,
+                    title: "Total Lessons",
+                    value: numberOfSessions,
+                    duration: 3,
+                    color: "#2196f3"
+                },{
+                    img: Tests,
+                    title: "Tests Taken",
+                    value: 24,
+                    duration: 4,
+                    color: "#ff9800"
+                },{
+                    img: Time,
+                    title: "Total Hours",
+                    value: 30,
+                    duration: 4,
+                    suffix: "hrs",
+                    color: "#9c27b0"
+                }].map((card, index) => (
+                    <Grid item xs={12} sm={6} md={3} key={index}>
+                        <CardPaper elevation={6} color={card.color}>
+                            <img src={card.img} alt={card.title} style={{ width: '50px', marginBottom: '12px' }} />
+                            <Title>{card.title}</Title>
+                            <Data start={0} end={card.value} duration={card.duration} suffix={card.suffix || ""} />
+                        </CardPaper>
                     </Grid>
-                    <Grid item xs={12} md={3} lg={3}>
-                        <StyledPaper>
-                            <img src={Lessons} alt="Lessons" />
-                            <Title>
-                                Total Lessons
-                            </Title>
-                            <Data start={0} end={numberOfSessions} duration={5} />
-                        </StyledPaper>
-                    </Grid>
-                    <Grid item xs={12} md={3} lg={3}>
-                        <StyledPaper>
-                            <img src={Tests} alt="Tests" />
-                            <Title>
-                                Tests Taken
-                            </Title>
-                            <Data start={0} end={24} duration={4} />
-                        </StyledPaper>
-                    </Grid>
-                    <Grid item xs={12} md={3} lg={3}>
-                        <StyledPaper>
-                            <img src={Time} alt="Time" />
-                            <Title>
-                                Total Hours
-                            </Title>
-                            <Data start={0} end={30} duration={4} suffix="hrs"/>                        </StyledPaper>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                            <SeeNotice />
-                        </Paper>
-                    </Grid>
+                ))}
+
+                <Grid item xs={12}>
+                    <Paper sx={{ p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', boxShadow: 3 }}>
+                        <SeeNotice />
+                    </Paper>
                 </Grid>
-            </Container>
-        </>
+            </Grid>
+        </Container>
     )
 }
 
-const StyledPaper = styled(Paper)`
-  padding: 16px;
+const CardPaper = styled(Paper)`
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  height: 200px;
-  justify-content: space-between;
+  height: 220px;
+  justify-content: center;
   align-items: center;
   text-align: center;
+  border-radius: 16px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0px 12px 24px rgba(0,0,0,0.15);
+  }
+  background-color: ${props => props.color || '#fff'};
+  color: #fff;
 `;
 
 const Title = styled.p`
-  font-size: 1.25rem;
+  font-size: 1.2rem;
+  margin: 8px 0;
+  font-weight: 600;
 `;
 
 const Data = styled(CountUp)`
-  font-size: calc(1.3rem + .6vw);
-  color: green;
+  font-size: calc(1.5rem + .5vw);
+  font-weight: 700;
 `;
 
-export default TeacherHomePage
+export default TeacherHomePage;
