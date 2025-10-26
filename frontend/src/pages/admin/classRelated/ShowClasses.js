@@ -29,7 +29,7 @@ const ShowClasses = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { sclassesList, loading, error, getresponse } = useSelector(
+  const { sclassesList, loading, getresponse } = useSelector(
     (state) => state.sclass
   );
   const { currentUser } = useSelector((state) => state.user);

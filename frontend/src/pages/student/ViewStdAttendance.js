@@ -15,7 +15,7 @@ import styled from 'styled-components';
 const ViewStdAttendance = () => {
     const dispatch = useDispatch();
     const [openStates, setOpenStates] = useState({});
-    const { userDetails, currentUser, loading, response, error } = useSelector((state) => state.user);
+    const { userDetails, currentUser, loading, response} = useSelector((state) => state.user);
     const [subjectAttendance, setSubjectAttendance] = useState([]);
     const [selectedSection, setSelectedSection] = useState('table');
 

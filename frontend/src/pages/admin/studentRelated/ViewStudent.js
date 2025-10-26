@@ -24,7 +24,7 @@ const ViewStudent = () => {
     const navigate = useNavigate();
     const params = useParams();
     const dispatch = useDispatch();
-    const { userDetails, response, loading, error } = useSelector((state) => state.user);
+    const { userDetails, response, loading,} = useSelector((state) => state.user);
 
     const studentID = params.id;
     const address = "Student";

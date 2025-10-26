@@ -22,7 +22,7 @@ const ClassDetails = () => {
     const params = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { subjectsList, sclassStudents, sclassDetails, loading, error, response, getresponse } = useSelector((state) => state.sclass);
+    const { subjectsList, sclassStudents, sclassDetails, loading, response, getresponse } = useSelector((state) => state.sclass);
 
     const classID = params.id;
 
